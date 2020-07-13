@@ -1,33 +1,4 @@
 domain_list={
-    "learningman.top",
-    "sh.dc.learningman.top",
-    "hk.dc.learningman.top",
-    "ajax.work.learningman.top",
-    "api.learningman.top",
-    "docker.learningman.top",
-    "ga.learningman.top",
-    "git.pro.learningman.top",
-    "g.learningman.top",
-    "ical.learningman.top",
-    "mcop.learningman.top",
-    "music.learningman.top",
-    "onedrive-hosts.learningman.top",
-    "rproxy.learningman.top",
-    "status.learningman.top",
-    "storage.learningman.top",
-    "sz.dc.learningman.top",
-    "tmp.learningman.top",
-    "v2.learningman.top",
-    "v3.learningman.top",
-    "work.learningman.top",
-    "aria2ng.learningman.top",
-    "avatar.learningman.top",
-    "photo.learningman.top",
-    "v2plus.learningman.top",
+    "www.google.com",
 }
-"""
-domain_list={
-    "sz.dc.learningman.top",
-    "learningman.top",
-    "aria2ng.learningman.top",
-}"""
+
