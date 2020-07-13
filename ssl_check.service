@@ -1,0 +1,15 @@
+[Unit]
+Description=SSLCheck
+Wants = network-online.target
+
+After = network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env uvicorn api:app
+WorkingDirectory=/www/wwwroot/sslcheck
+StandardOutput=syslog
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
