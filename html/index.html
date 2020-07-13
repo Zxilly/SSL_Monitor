@@ -6,8 +6,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
     <link href="css/mdui.min.css" rel="stylesheet">
     <script src="js/mdui.min.js"></script>
+    <style>
+        .mdui-progress {
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            border-radius: 0;
+            height: 10px;
+            position: absolute;
+        }
+
+        .mdui-panel {
+            margin-bottom: 40px;
+            max-width: 800px
+        }
+
+        .mdui-panel-item-body {
+            position: relative
+        }
+
+        .item-title {
+            color: rgba(0, 0, 0, .54)
+        }
+
+        .mdui-panel-item-summary {
+            padding-right: 25px
+        }
+    </style>
+    <script>
+        function readresp(data_object) {
+            for (var i = 0; i < data_object.length; i++) {
+                //console.log(data_object[i]);
+                console.log(data_object[i]["expireTime"])
+                console.log(data_object[i]["passPercent"])
+                if (data_object[i]["expireTime"] <= 15 || data_object[i]["passPercent"] >= 85) {
+                    render_alert(data_object[i]);
+                } else {
+                    render_normal(data_object[i])
+                }
+            }
+        }
+
+        function render_normal(data) {
+            var slice_normal = `<div class="mdui-panel-item">
+    <div class="mdui-panel-item-header">
+        <div class="mdui-panel-item-title">${data["domain"]}</div>
+        <div class="mdui-panel-item-summary mdui-text-right">${data["expireTime"]}天后到期</div>
+        <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="mdui-panel-item-body">
+        <p><span class="item-title">使用者&nbsp;&nbsp;</span>${data["commonName"]}</p>
+        <p><span class="item-title">序列号&nbsp;&nbsp;</span>${data["serialName"]}</p>
+        <p><span class="item-title">生效时间&nbsp;&nbsp;</span>${data["notBefore"]}</p>
+        <p><span class="item-title">到期时间&nbsp;&nbsp;</span>${data["notAfter"]}</p>
+        <p><span class="item-title">剩余&nbsp;&nbsp;</span>${data["expireTime"]}天</p>
+        <p><span class="item-title">颁发机构&nbsp;&nbsp;</span>${data["issuer"]}</p>
+        <p><span class="item-title">使用者可选名称&nbsp;&nbsp;</span>${data["altName"]}</p>
+        <div class="mdui-progress">
+            <div class="mdui-progress-determinate" style="width: ${data["passPercent"]}%;"></div>
+        </div>
+    </div>
+</div>`
+            //console.log(data["domain"]);
+            $$('#main').append(slice_normal);
+        }
+
+        function render_alert(data) {
+            var slice_normal = `<div class="mdui-panel-item">
+    <div class="mdui-panel-item-header">
+        <div class="mdui-panel-item-title">${data["domain"]}</div>
+        <div class="mdui-panel-item-summary mdui-text-right mdui-text-color-pink">${data["expireTime"]}天后到期</div>
+        <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="mdui-panel-item-body">
+        <p><span class="item-title">使用者&nbsp;&nbsp;</span>${data["commonName"]}</p>
+        <p><span class="item-title">序列号&nbsp;&nbsp;</span>${data["serialName"]}</p>
+        <p><span class="item-title">生效时间&nbsp;&nbsp;</span>${data["notBefore"]}</p>
+        <p><span class="item-title">到期时间&nbsp;&nbsp;</span>${data["notAfter"]}</p>
+        <p class="mdui-text-color-pink"><span class="item-title">剩余&nbsp;&nbsp;</span>${data["expireTime"]}天</p>
+        <p><span class="item-title">颁发机构&nbsp;&nbsp;</span>${data["issuer"]}</p>
+        <p><span class="item-title">使用者可选名称&nbsp;&nbsp;</span>${data["altName"]}</p>
+        <div class="mdui-progress">
+            <div class="mdui-progress-determinate" style="width: ${data["passPercent"]}%;"></div>
+        </div>
+    </div>
+</div>`
+            //console.log(data["domain"]);
+            $$('#main').append(slice_normal);
+        }
+
+        var apiurl = "//localhost:8000/sslcheck/";
+        var $$ = mdui.JQ;
+        $$.ajax({
+            url: apiurl,
+            async: true,
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+                readresp(data);
+            }
+        })
+    </script>
 </head>
-<body class="mdui-theme-primary-indigo">
+<body class="mdui-theme-primary-indigo mdui-appbar-with-toolbar mdui-color-indigo-50">
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
         <a class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">library_books</i></a>
@@ -17,15 +118,15 @@
         </button>
         <ul class="mdui-menu" id="menu">
             <li class="mdui-menu-item">
-                <a href="javascript:;" class="mdui-ripple"><i
+                <a href="javascript:" class="mdui-ripple"><i
                         class="mdui-menu-item-icon mdui-icon material-icons">share</i>关于证书透明</a>
             </li><!-- TODO:Add blog link -->
             <li class="mdui-divider"></li>
             <li class="mdui-menu-item">
                 <a href="https://github.com/Zxilly/SSL_Monitor" target="_blank" class="mdui-ripple"><i
                         class="mdui-menu-item-icon material-icons">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         x="0px" y="0px" viewBox="0 0 36 36"
                          enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon"
                          style="width: 24px;height:24px;">
         <path fill-rule="evenodd" clip-rule="evenodd" fill="#000000" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
@@ -40,9 +141,10 @@
         </ul>
     </div>
 </header>
+<div style="padding-top: 40px">
+    <div id="main" class="mdui-panel mdui-panel-gapless mdui-center" style="max-width: 800px" mdui-panel="">
 
-<div class="mdui-container">
-
-
+    </div>
 </div>
+
 </body>

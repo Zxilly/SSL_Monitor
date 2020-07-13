@@ -31,13 +31,16 @@ def write_json(info_list):
 
 def analyze_cert(cert, domain):
     common_name = cert['subject'][0][0][1]
-    issuer = cert['issuer'][2][0][1]
+    issuer = cert['issuer'][-1][0][1]
+    # print(cert['issuer'])
+    # print(issuer)
     serial_name = cert["serialNumber"]
     not_before = cert['notBefore']
     not_after = cert['notAfter']
-    alt_name = []
+    alt_name = ''
     for one in cert['subjectAltName']:
-        alt_name.append(one[1])
+        alt_name += one[1]
+        alt_name += ';&nbsp;'
 
     not_before_struct_time = datetime.strptime(not_before, time_recognition_format_string)  # Jun  2 05:09:43 2020 GMT
     not_after_struct_time = datetime.strptime(not_after, time_recognition_format_string)
@@ -47,10 +50,11 @@ def analyze_cert(cert, domain):
     not_after = datetime.strftime(not_after_struct_time, time_generation_format_string)
     expire_time_struct_time = not_after_struct_time - time_now
     expire_time = expire_time_struct_time.days
-    pass_percent = (time_now - not_before_struct_time) / (not_after_struct_time - not_before_struct_time)
+    pass_percent = (time_now - not_before_struct_time) / (not_after_struct_time - not_before_struct_time) * 100
 
     info = {"domain": domain, "commonName": common_name, "issuer": issuer, "serialName": serial_name,
-            "notBefore": not_before, "notAfter": not_after, "expireTime": expire_time, "passPercent": pass_percent}
+            "notBefore": not_before, "notAfter": not_after, "expireTime": expire_time, "passPercent": pass_percent,
+            "altName": alt_name}
     # info = [domain, common_name, issuer, serial_name, not_before, not_after, alt_name]
     return info
 
@@ -59,7 +63,9 @@ if __name__ == '__main__':
     info_list = []
     for one in domain_list:
         cert_content = get_cert(one)
-        info_list.append(analyze_cert(cert_content, one))
+        info = analyze_cert(cert_content, one)
+        info_list.append(info)
+        print(info["domain"] + " finished")
     write_json(info_list)
     # print(info_list)
 
